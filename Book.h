@@ -10,6 +10,7 @@ struct Book {
     string title;
     string author;
     bool isAvailable;
+    string borrower; // Adding this, in case you guys want it to be specified
 
     Book() : id(0), title(""), author(""), isAvailable(true) {}
     Book(int bId, string bTitle, string bAuthor)
