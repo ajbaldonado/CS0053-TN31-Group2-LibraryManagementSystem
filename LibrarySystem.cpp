@@ -16,7 +16,7 @@ void removeBook() {
 void updateBook() {
 };
 
-void viewAllBooks(const vector<Book>& inventory) {
+void viewAllBooks(const vector<Book>& libraryCatalog) {
     for (const auto& book : libraryCatalog) {
         cout << "[" << book.id << "] " << book.title << " by " << book.author << " — ";
         
