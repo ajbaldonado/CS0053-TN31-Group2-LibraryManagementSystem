@@ -16,5 +16,14 @@ void removeBook() {
 void updateBook() {
 };
 
-void viewAllBooks() {
+void viewAllBooks(const vector<Book>& inventory) {
+    for (const auto& book : libraryCatalog) {
+        cout << "[" << book.id << "] " << book.title << " by " << book.author << " — ";
+        
+        if (book.isAvailable) {
+            cout << "Available\n";
+        } else {
+            cout << "Borrowed\n";
+        }
+    }
 };
