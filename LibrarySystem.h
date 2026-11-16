@@ -6,7 +6,6 @@
 
 extern std::vector<Book> libraryCatalog;
 
-//aj
 void addBook();
 void removeBook();
 void updateBook();
