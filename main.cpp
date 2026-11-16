@@ -21,7 +21,7 @@ void displayMenu() {
 }
 
 int main() {
-    loadFromFile();
+    //loadFromFile();
 
     int choice;
     do {
@@ -41,7 +41,7 @@ int main() {
                 viewAllBooks(); 
                 break;
             case 3: 
-                searchBook(); 
+                searchBook();
                 break;
             case 4: 
                 updateBook(); 
