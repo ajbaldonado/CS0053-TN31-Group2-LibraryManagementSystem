@@ -1,1 +1,3 @@
 *.exe\n*.o\n*.out\n.vscode/\nbuild/
+.vscode/
+output/
