@@ -103,8 +103,16 @@ void viewAllBooks() { // Displays all the books currently registered in the cata
     }
 }
 
-void searchBook() { cout << "Search feature coming soon.\n"; }
-void generateSummary() { cout << "Summary feature coming soon.\n"; }
+void searchBook() { 
+    cout << "Search feature coming soon.\n";
+    
+    }
+
+void generateSummary() { 
+    cout << "Summary feature coming soon.\n";
+    
+    }
+
 void borrowBook() { cout << "Borrow feature coming soon.\n"; }
 void returnBook() { cout << "Return feature coming soon.\n"; }
 void loadFromFile() {}
