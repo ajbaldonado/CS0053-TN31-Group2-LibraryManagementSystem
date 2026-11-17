@@ -10,6 +10,7 @@ struct Book {
     string title;
     string author;
     bool isAvailable;
+    string borrower;
 
     Book() : id(0), title(""), author(""), isAvailable(true) {}
     Book(int bId, string bTitle, string bAuthor)
