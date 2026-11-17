@@ -108,10 +108,24 @@ void searchBook() {
     
     }
 
-void generateSummary() { 
-    cout << "Summary feature coming soon.\n";
-    
+void generateSummary() { // Summarizes status of all books
+    if (libraryCatalog.empty()) {
+        cout << "No books in the library." << endl;
+        return;
     }
+    int availableCount = 0;
+    int borrowedCount = 0;
+    for (const auto& b : libraryCatalog) {
+        if (b.isAvailable) {
+            availableCount++;
+        } else {
+            borrowedCount++;
+        }
+    }
+    cout << "Total Books in System:     " << libraryCatalog.size() << "\n";
+    cout << "Number of Books Available: " << availableCount << "\n";
+    cout << "Number of Books Borrowed:  " << borrowedCount << "\n";
+}
 
 void borrowBook() { cout << "Borrow feature coming soon.\n"; }
 void returnBook() { cout << "Return feature coming soon.\n"; }
