@@ -88,7 +88,7 @@ void updateBook() { // Prompts the user to enter the ID of the book to be update
     cout << "Book updated successfully." << endl;
 }
 
-void viewAllBooks() {
+void viewAllBooks() { // Displays all the books currently registered in the catalog in a tabular format
     if (libraryCatalog.empty()) {
         cout << "No books in the library." << endl;
         return;
