@@ -15,11 +15,10 @@ void displayMenu() {
     std::cout << "6. Borrow Book\n";
     std::cout << "7. Return Book\n";
     std::cout << "8. Generate Summary Report\n";
-    std::cout << "9. Exit\n";
-    std::cout << "10. View Overdue Books\n";
-    std::cout << "11. Logout\n";
+    std::cout << "9. View Overdue Books\n";
+    std::cout << "10. Logout\n";
     std::cout << "=====================================\n";
-    std::cout << "Enter choice (1-11): ";
+    std::cout << "Enter choice (1-10): ";
 }
 
 void displayUserMenu() {
@@ -126,14 +125,9 @@ bool runAdminMenu() {
                 generateSummary();
                 break;
             case 9:
-                saveToFile();
-                saveUsersToFile();
-                cout << "Saving changes and exiting system...\n";
-                return true;
-            case 10:
                 viewOverdueBooks();
                 break;
-            case 11:
+            case 10:
                 saveToFile();
                 cout << "Logged out.\n";
                 return false;
