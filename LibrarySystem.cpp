@@ -8,7 +8,7 @@
 #include <sstream>
 #include <ctime>
 #include <cmath>
-#include "LibrarySystem.h"d
+#include "LibrarySystem.h"
 
 using namespace std;
 
