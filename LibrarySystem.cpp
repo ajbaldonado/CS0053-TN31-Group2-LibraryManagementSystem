@@ -107,9 +107,44 @@ void viewAllBooks() { // Displays all the books currently registered in the cata
     }
 }
 
-void searchBook() { 
-    cout << "Search feature coming soon.\n";
-    
+void searchBook() { // Searches for books by ID, title, or author and displays the book's details
+    if (libraryCatalog.empty()) {
+        cout << "No books in the library to search." << endl;
+        return;
+    }
+
+    string query;
+    cout << "Enter ID, title, or author: ";
+    cin.ignore();
+    getline(cin, query);
+
+    bool found = false;
+    cout << "\nSEARCH RESULTS\n";
+    for (const auto& b : libraryCatalog) {
+        if (to_string(b.id) == query || 
+            b.title.find(query) != string::npos || // find + npos to allow partial keywords
+            b.author.find(query) != string::npos) {
+            
+            cout << "ID:       " << b.id << "\n"
+                 << "Title:    " << b.title << "\n"
+                 << "Author:   " << b.author << "\n"
+                 << "Status:   " << (b.isAvailable ? "Available" : "Borrowed") << "\n";
+            /* if (!b.isAvailable) {
+                cout << "Borrower: " << (b.borrower.empty() ? "Unknown" : b.borrower) << "\n";
+            } */ // TEMPORARILY DISABLED
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "No books found matching " << query << ".\n";
+    }
+}
+
+void loadFromFile() { // loads previous book records
+    libraryCatalog.clear();
+    ifstream inFile("books.txt");
+    if (!inFile.is_open()) {
+        return; // create file on first save
     }
 
 void generateSummary() { // Summarizes status of all books
@@ -129,6 +164,38 @@ void generateSummary() { // Summarizes status of all books
     cout << "Total Books in System:     " << libraryCatalog.size() << "\n";
     cout << "Number of Books Available: " << availableCount << "\n";
     cout << "Number of Books Borrowed:  " << borrowedCount << "\n";
+}
+
+void registerUser() { // creates a new user acc
+    string uname, pass;
+    cin.ignore(10000, '\n');
+    cout << "\n--- REGISTER NEW USER ---\n";
+    cout << "Enter Username: ";
+    getline(cin, uname);
+
+    if (uname.empty() || uname.find('|') != string::npos) {
+        cout << "[Error] Username cannot be empty or contain '|'.\n";
+        return;
+    }
+
+    for (const auto& u : userList) {
+        if (u.username == uname) {
+            cout << "[Error] Username already taken.\n";
+            return;
+        }
+    }
+
+    cout << "Enter Password: ";
+    getline(cin, pass);
+    if (pass.empty() || pass.find('|') != string::npos) {
+        cout << "[Error] Password cannot be empty or contain '|'.\n";
+        return;
+    }
+
+    int nextId = userList.empty() ? 1 : userList.back().id + 1;
+    userList.push_back(User(nextId, uname, pass, "user"));
+    saveUsersToFile();
+    cout << "Registration successful! You can now log in.\n";
 }
 
 void borrowBook() { cout << "Borrow feature coming soon.\n"; }
