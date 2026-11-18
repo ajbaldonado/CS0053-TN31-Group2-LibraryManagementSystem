@@ -152,12 +152,17 @@ void viewAllBooks() { // Displays all the books currently registered in the cata
         return;
     }
     cout << left << setw(6) << "ID" << setw(30) << "Title"
-         << setw(25) << "Author" << "Status\n";
-    cout << string(70, '-') << "\n";
+         << setw(25) << "Author" << setw(12) << "Status" << "Due Date\n"; 
+    cout << string(85, '-') << "\n";
     for (const auto& b : libraryCatalog) {
         cout << left << setw(6) << b.id << setw(30) << b.title
              << setw(25) << b.author
-             << (b.isAvailable ? "Available" : "Borrowed") << "\n";
+             << setw(12) << (b.isAvailable ? "Available" : "Borrowed")
+             << (b.isAvailable ? string("-") : b.dueDate);
+        if (!b.isAvailable && daysOverdue(b.dueDate) > 0) {
+            cout << " (OVERDUE)";                                            
+        }                                                                   
+        cout << "\n";                                                        
     }
 }
 
