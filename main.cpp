@@ -16,8 +16,131 @@ void displayMenu() {
     std::cout << "7. Return Book\n";
     std::cout << "8. Generate Summary Report\n";
     std::cout << "9. Exit\n";
+    std::cout << "10. View Overdue Books\n";
+    std::cout << "11. Logout\n";
     std::cout << "=====================================\n";
-    std::cout << "Enter choice (1-9): ";
+    std::cout << "Enter choice (1-11): ";
+}
+
+void displayUserMenu() {
+    std::cout << "\n=====================================\n";
+    std::cout << "      LIBRARY MANAGEMENT SYSTEM      \n";
+    std::cout << "=====================================\n";
+    std::cout << "Logged in as: " << currentUser->username << "\n";
+    std::cout << "1. View All Books\n";
+    std::cout << "2. Search Catalog\n";
+    std::cout << "3. Borrow Book\n";
+    std::cout << "4. Return Book\n";
+    std::cout << "5. My Borrowed Books\n";
+    std::cout << "6. Logout\n";
+    std::cout << "7. Exit\n";
+    std::cout << "=====================================\n";
+    std::cout << "Enter choice (1-7): ";
+}
+
+// Runs the user menu. Returns true if the program should exit, false if the user logged out.
+bool runUserMenu() {
+    while (true) {
+        displayUserMenu();
+        int choice;
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                viewAllBooks();
+                break;
+            case 2:
+                searchBook();
+                break;
+            case 3:
+                borrowBook();
+                saveToFile();
+                break;
+            case 4:
+                returnBook();
+                saveToFile();
+                break;
+            case 5:
+                viewMyBooks();
+                break;
+            case 6:
+                saveToFile();
+                cout << "Logged out.\n";
+                return false;
+            case 7:
+                saveToFile();
+                saveUsersToFile();
+                cout << "Saving changes and exiting system...\n";
+                return true;
+            default:
+                cout << "Please input a valid choice.\n";
+        }
+    }
+}
+
+// Returns true if the program should exit, false if the admin logged out.
+bool runAdminMenu() {
+    while (true) {
+        displayMenu();
+        int choice;
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                addBook();
+                saveToFile();
+                break;
+            case 2:
+                viewAllBooks();
+                break;
+            case 3:
+                searchBook();
+                break;
+            case 4:
+                updateBook();
+                saveToFile();
+                break;
+            case 5:
+                removeBook();
+                saveToFile();
+                break;
+            case 6:
+                borrowBook();
+                saveToFile();
+                break;
+            case 7:
+                returnBook();
+                saveToFile();
+                break;
+            case 8:
+                generateSummary();
+                break;
+            case 9:
+                saveToFile();
+                saveUsersToFile();
+                cout << "Saving changes and exiting system...\n";
+                return true;
+            case 10:                      // ***** ADDED *****
+                viewOverdueBooks();
+                break;
+            case 11:                      // ***** ADDED *****
+                saveToFile();
+                cout << "Logged out.\n";
+                return false;
+            default:
+                cout << "Please input a valid choice.\n";
+        }
+    }
 }
 
 int main() {
