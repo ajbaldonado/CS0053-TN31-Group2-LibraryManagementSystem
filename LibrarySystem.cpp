@@ -4,11 +4,15 @@
 #include <algorithm>
 #include <iomanip>
 #include <limits>
+#include <fstream>
+#include <sstream>
 #include "LibrarySystem.h"
 
 using namespace std;
 
 vector<Book> libraryCatalog;
+vector<User> userList;
+User* currentUser = nullptr;
 
 // Reads an int safely; returns false if input wasn't a number
 static bool readInt(int& out) {

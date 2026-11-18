@@ -19,5 +19,9 @@ void returnBook();
 
 void loadFromFile();
 void saveToFile();
+void loadUsersFromFile();
+void saveUsersToFile();
+bool loginUser();
+void registerUser();
 
 #endif
