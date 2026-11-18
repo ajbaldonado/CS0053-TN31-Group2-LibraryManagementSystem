@@ -107,6 +107,43 @@ void viewAllBooks() { // Displays all the books currently registered in the cata
     }
 }
 
+void searchBook() { // Searches for books by ID, title, or author and displays the book's details
+    if (libraryCatalog.empty()) {
+        cout << "No books in the library to search." << endl;
+        return;
+    }
+
+    string query;
+    cout << "Enter ID, title, or author: ";
+    cin.ignore();
+    getline(cin, query);
+
+    bool found = false;
+    cout << "\nSEARCH RESULTS\n";
+    for (const auto& b : libraryCatalog) {
+        if (to_string(b.id) == query || 
+            b.title.find(query) != string::npos || // find + npos to allow partial keywords
+            b.author.find(query) != string::npos) {
+            
+            cout << "ID:       " << b.id << "\n"
+                 << "Title:    " << b.title << "\n"
+                 << "Author:   " << b.author << "\n"
+                 << "Status:   " << (b.isAvailable ? "Available" : "Borrowed") << "\n";
+            /* if (!b.isAvailable) {
+                cout << "Borrower: " << (b.borrower.empty() ? "Unknown" : b.borrower) << "\n";
+            } */ // TEMPORARILY DISABLED
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "No books found matching " << query << ".\n";
+    }
+}
+
+void generateSummary() { 
+    cout << "Summary feature coming soon.\n";
+    
+    }
 
 void loadFromFile() { // loads previous book records
     libraryCatalog.clear();
@@ -258,8 +295,5 @@ void registerUser() { // creates a new user acc
     cout << "Registration successful! You can now log in.\n";
 }
 
-
-void searchBook() { cout << "Search feature coming soon.\n"; }
-void generateSummary() { cout << "Summary feature coming soon.\n"; }
 void borrowBook() { cout << "Borrow feature coming soon.\n"; }
 void returnBook() { cout << "Return feature coming soon.\n"; }
