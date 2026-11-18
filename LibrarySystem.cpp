@@ -315,5 +315,191 @@ void registerUser() { // creates a new user acc
 
 void searchBook() { cout << "Search feature coming soon.\n"; }
 void generateSummary() { cout << "Summary feature coming soon.\n"; }
-void borrowBook() { cout << "Borrow feature coming soon.\n"; }
-void returnBook() { cout << "Return feature coming soon.\n"; }
+
+// Lets the logged-in user borrow an available book and sets its due date
+void borrowBook() {
+    if (currentUser == nullptr) {
+        cout << "You must be logged in to borrow a book.\n";
+        return;
+    }
+
+    // Count what this user already has, and check for overdue books
+    int borrowedCount = 0;
+    bool hasOverdue = false;
+    for (const auto& b : libraryCatalog) {
+        if (!b.isAvailable && b.borrowedBy == currentUser->username) {
+            borrowedCount++;
+            if (daysOverdue(b.dueDate) > 0) hasOverdue = true;
+        }
+    }
+    if (hasOverdue) {
+        cout << "You have an overdue book. Please return it before borrowing another.\n";
+        return;
+    }
+    if (borrowedCount >= MAX_BORROWED_BOOKS) {
+        cout << "Borrow limit reached (" << MAX_BORROWED_BOOKS
+             << " books). Please return a book first.\n";
+        return;
+    }
+
+    if (libraryCatalog.empty()) {
+        cout << "No books in the library.\n";
+        return;
+    }
+    viewAllBooks();
+
+    int id;
+    cout << "\nEnter book ID to borrow: ";
+    if (!readInt(id)) {
+        cout << "Invalid ID. Please enter a number.\n";
+        return;
+    }
+
+    auto it = find_if(libraryCatalog.begin(), libraryCatalog.end(),
+                      [id](const Book& b) { return b.id == id; });
+    if (it == libraryCatalog.end()) {
+        cout << "Book not found.\n";
+        return;
+    }
+    if (!it->isAvailable) {
+        if (it->borrowedBy == currentUser->username) {
+            cout << "You already borrowed this book. It is due on " << it->dueDate << ".\n";
+        } else {
+            cout << "Sorry, this book is currently borrowed. Expected back on "
+                 << it->dueDate << ".\n";
+        }
+        return;
+    }
+
+    it->isAvailable = false;
+    it->borrowedBy = currentUser->username;
+    it->dueDate = addDays(getTodayDate(), LOAN_DAYS);
+    cout << "You borrowed \"" << it->title << "\".\n";
+    cout << "Due date: " << it->dueDate << " (" << LOAN_DAYS << " days from today).\n";
+}
+
+// Returns a borrowed book. Users can only return their own books; admins can return any.
+void returnBook() {
+    if (currentUser == nullptr) {
+        cout << "You must be logged in to return a book.\n";
+        return;
+    }
+    bool isAdmin = (currentUser->role == "admin");
+
+    if (isAdmin) {
+        bool anyBorrowed = false;
+        for (const auto& b : libraryCatalog) {
+            if (!b.isAvailable) { anyBorrowed = true; break; }
+        }
+        if (!anyBorrowed) {
+            cout << "No books are currently borrowed.\n";
+            return;
+        }
+        viewAllBooks();
+    } else {
+        bool hasBooks = false;
+        for (const auto& b : libraryCatalog) {
+            if (!b.isAvailable && b.borrowedBy == currentUser->username) { hasBooks = true; break; }
+        }
+        if (!hasBooks) {
+            cout << "You have no borrowed books to return.\n";
+            return;
+        }
+        viewMyBooks();
+    }
+
+    int id;
+    cout << "\nEnter book ID to return: ";
+    if (!readInt(id)) {
+        cout << "Invalid ID. Please enter a number.\n";
+        return;
+    }
+
+    auto it = find_if(libraryCatalog.begin(), libraryCatalog.end(),
+                      [id](const Book& b) { return b.id == id; });
+    if (it == libraryCatalog.end()) {
+        cout << "Book not found.\n";
+        return;
+    }
+    if (it->isAvailable) {
+        cout << "This book is not currently borrowed.\n";
+        return;
+    }
+    if (!isAdmin && it->borrowedBy != currentUser->username) {
+        cout << "You can only return books that you borrowed.\n";
+        return;
+    }
+
+    int late = daysOverdue(it->dueDate);
+    cout << "\"" << it->title << "\" returned successfully.\n";
+    if (late > 0) {
+        cout << "This book was " << late << " day(s) overdue. Fine: PHP "
+             << late * FINE_PER_DAY << ".\n";
+    } else {
+        cout << "Returned on time. Thank you!\n";
+    }
+
+    it->isAvailable = true;
+    it->borrowedBy = "NONE";
+    it->dueDate = "NONE";
+}
+
+// Shows the books the logged-in user currently has, with due dates
+void viewMyBooks() {
+    if (currentUser == nullptr) return;
+
+    bool found = false;
+    int totalFine = 0;
+    for (const auto& b : libraryCatalog) {
+        if (b.isAvailable || b.borrowedBy != currentUser->username) continue;
+
+        if (!found) {
+            cout << "\nYOUR BORROWED BOOKS\n";
+            cout << left << setw(6) << "ID" << setw(30) << "Title"
+                 << setw(14) << "Due Date" << "Status\n";
+            cout << string(70, '-') << "\n";
+            found = true;
+        }
+
+        int late = daysOverdue(b.dueDate);
+        int left_ = daysBetween(getTodayDate(), b.dueDate); // days remaining
+        cout << left << setw(6) << b.id << setw(30) << b.title << setw(14) << b.dueDate;
+        if (late > 0) {
+            cout << "OVERDUE by " << late << " day(s)\n";
+            totalFine += late * FINE_PER_DAY;
+        } else if (left_ == 0) {
+            cout << "Due today\n";
+        } else {
+            cout << left_ << " day(s) left\n";
+        }
+    }
+
+    if (!found) {
+        cout << "You have no borrowed books.\n";
+    } else if (totalFine > 0) {
+        cout << "\nCurrent fines: PHP " << totalFine << "\n";
+    }
+}
+
+// Admin report: every overdue book, who has it, and the fine so far
+void viewOverdueBooks() {
+    bool found = false;
+    for (const auto& b : libraryCatalog) {
+        int late = daysOverdue(b.dueDate);
+        if (b.isAvailable || late <= 0) continue;
+
+        if (!found) {
+            cout << "\nOVERDUE BOOKS\n";
+            cout << left << setw(6) << "ID" << setw(28) << "Title" << setw(16) << "Borrower"
+                 << setw(13) << "Due Date" << setw(10) << "Days Late" << "Fine\n";
+            cout << string(80, '-') << "\n";
+            found = true;
+        }
+        cout << left << setw(6) << b.id << setw(28) << b.title << setw(16) << b.borrowedBy
+             << setw(13) << b.dueDate << setw(10) << late
+             << "PHP " << late * FINE_PER_DAY << "\n";
+    }
+    if (!found) {
+        cout << "No overdue books.\n";
+    }
+}
