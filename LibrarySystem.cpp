@@ -6,7 +6,9 @@
 #include <limits>
 #include <fstream>
 #include <sstream>
-#include "LibrarySystem.h"
+#include <ctime>
+#include <cmath>
+#include "LibrarySystem.h"d
 
 using namespace std;
 
@@ -23,6 +25,58 @@ static bool readInt(int& out) {
     }
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear rest of line
     return true;
+}
+
+static const int LOAN_DAYS = 7;           // how many days a book may be borrowed
+static const int FINE_PER_DAY = 5;         // fine (PHP) for every day a book is overdue
+static const int MAX_BORROWED_BOOKS = 3;  // most books one user can hold at a time
+
+// Today's date as "YYYY-MM-DD"
+static string getTodayDate() {
+    time_t now = time(nullptr);
+    tm* t = localtime(&now);
+    char buf[11];
+    strftime(buf, sizeof(buf), "%Y-%m-%d", t);
+    return string(buf);
+}
+
+// Turns "YYYY-MM-DD" into a tm; returns false if the text is not a valid date
+static bool parseDate(const string& s, tm& out) {
+    int y, m, d;
+    if (sscanf(s.c_str(), "%d-%d-%d", &y, &m, &d) != 3) return false;
+    if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+    out = tm();
+    out.tm_year = y - 1900;
+    out.tm_mon = m - 1;
+    out.tm_mday = d;
+    out.tm_hour = 12; // noon, so daylight-saving shifts never change the day
+    return true;
+}
+
+// Returns date + days as "YYYY-MM-DD"
+static string addDays(const string& date, int days) {
+    tm t;
+    if (!parseDate(date, t)) return "NONE";
+    t.tm_mday += days;
+    mktime(&t); // normalizes overflow (e.g. Jan 35 -> Feb 4)
+    char buf[11];
+    strftime(buf, sizeof(buf), "%Y-%m-%d", &t);
+    return string(buf);
+}
+
+// Number of days from 'from' to 'to' (negative if 'to' is earlier)
+static int daysBetween(const string& from, const string& to) {
+    tm a, b;
+    if (!parseDate(from, a) || !parseDate(to, b)) return 0;
+    double secs = difftime(mktime(&b), mktime(&a));
+    return (int)floor(secs / 86400.0 + 0.5);
+}
+
+// How many days past the due date a book is today (0 if not overdue)
+static int daysOverdue(const string& dueDate) {
+    if (dueDate == "NONE") return 0;
+    int late = daysBetween(dueDate, getTodayDate());
+    return late > 0 ? late : 0;
 }
 
 void addBook() { //Prompts the user to enter book details to be added into the catalog (asks for name and author).
