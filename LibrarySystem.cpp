@@ -159,13 +159,6 @@ void generateSummary() { // Summarizes status of all books
     cout << "Number of Books Borrowed:  " << borrowedCount << "\n";
 }
 
-void loadFromFile() { // loads previous book records
-    libraryCatalog.clear();
-    ifstream inFile("books.txt");
-    if (!inFile.is_open()) {
-        return; // create file on first save
-    }
-
 void registerUser() { // creates a new user acc
     string uname, pass;
     cin.ignore(10000, '\n');
@@ -200,5 +193,12 @@ void registerUser() { // creates a new user acc
 
 void borrowBook() { cout << "Borrow feature coming soon.\n"; }
 void returnBook() { cout << "Return feature coming soon.\n"; }
-void loadFromFile() {}
+
+void loadFromFile() { // loads previous book records
+    libraryCatalog.clear();
+    ifstream inFile("books.txt");
+    if (!inFile.is_open()) {
+        return; // create file on first save
+    }
+
 void saveToFile() {}
