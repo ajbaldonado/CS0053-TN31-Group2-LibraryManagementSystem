@@ -140,13 +140,6 @@ void searchBook() { // Searches for books by ID, title, or author and displays t
     }
 }
 
-void loadFromFile() { // loads previous book records
-    libraryCatalog.clear();
-    ifstream inFile("books.txt");
-    if (!inFile.is_open()) {
-        return; // create file on first save
-    }
-
 void generateSummary() { // Summarizes status of all books
     if (libraryCatalog.empty()) {
         cout << "No books in the library." << endl;
@@ -165,6 +158,13 @@ void generateSummary() { // Summarizes status of all books
     cout << "Number of Books Available: " << availableCount << "\n";
     cout << "Number of Books Borrowed:  " << borrowedCount << "\n";
 }
+
+void loadFromFile() { // loads previous book records
+    libraryCatalog.clear();
+    ifstream inFile("books.txt");
+    if (!inFile.is_open()) {
+        return; // create file on first save
+    }
 
 void registerUser() { // creates a new user acc
     string uname, pass;
