@@ -3,11 +3,8 @@
 
 #include <vector>
 #include "Book.h"
-#include "User.h" 
 
 extern std::vector<Book> libraryCatalog;
-extern std::vector<User> userList;
-extern User* currentUser; 
 
 void addBook();
 void removeBook();
@@ -19,8 +16,6 @@ void generateSummary();
 
 void borrowBook();
 void returnBook();
-void viewMyBooks();
-void viewOverdueBooks(); 
 
 void loadFromFile();
 void saveToFile();
