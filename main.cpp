@@ -19,7 +19,7 @@ void displayMenu() {
     std::cout << "=====================================\n";
     std::cout << "Enter choice (1-9): ";
 }
-hello 
+
 int main() {
     loadFromFile();
     loadUsersFromFile();
