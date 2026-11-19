@@ -125,3 +125,27 @@ ID    Title                         Author                   Status      Due Dat
 Enter book ID to borrow: 11
 You borrowed "Dragon Ball".
 Due date: 2026-11-26 (7 days from today).
+
+Returning Books (user)
+=====================================
+      LIBRARY MANAGEMENT SYSTEM      
+=====================================
+Logged in as: AJ
+1. View All Books
+2. Search Catalog
+3. Borrow Book
+4. Return Book
+5. My Borrowed Books
+6. Logout
+7. Exit
+=====================================
+Enter choice (1-7): 4
+
+YOUR BORROWED BOOKS
+ID    Title                         Due Date      Status
+----------------------------------------------------------------------
+11    Dragon Ball                   2026-11-26    7 day(s) left
+
+Enter book ID to return: 11
+"Dragon Ball" returned successfully.
+Returned on time. Thank you!
