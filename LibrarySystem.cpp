@@ -188,9 +188,6 @@ void searchBook() { // Searches for books by ID, title, or author and displays t
                  << "Title:    " << b.title << "\n"
                  << "Author:   " << b.author << "\n"
                  << "Status:   " << (b.isAvailable ? "Available" : "Borrowed") << "\n";
-            /* if (!b.isAvailable) {
-                cout << "Borrower: " << (b.borrower.empty() ? "Unknown" : b.borrower) << "\n";
-            } */ // TEMPORARILY DISABLED
             found = true;
         }
     }
