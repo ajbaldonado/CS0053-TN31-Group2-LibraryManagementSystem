@@ -1,13 +1,13 @@
 #ifndef LIBRARY_SYSTEM_H
 #define LIBRARY_SYSTEM_H
 
-#include <vector>
 #include "Book.h"
-#include "User.h" 
+#include "User.h"
+#include <vector>
 
 extern std::vector<Book> libraryCatalog;
 extern std::vector<User> userList;
-extern User* currentUser; 
+extern User *currentUser;
 
 void addBook();
 void removeBook();
@@ -20,7 +20,7 @@ void generateSummary();
 void borrowBook();
 void returnBook();
 void viewMyBooks();
-void viewOverdueBooks(); 
+void viewOverdueBooks();
 
 void loadFromFile();
 void saveToFile();
